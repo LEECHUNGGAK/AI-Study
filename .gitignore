@@ -1,3 +1,7 @@
 .venv/
 .env
 data/
+fbank/
+*.png
+mfcc/
+__pycache__/
