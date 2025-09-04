@@ -2,6 +2,8 @@
 .env
 data/
 fbank/
-*.png
 mfcc/
 __pycache__/
+wav/
+*.png
+*.txt
