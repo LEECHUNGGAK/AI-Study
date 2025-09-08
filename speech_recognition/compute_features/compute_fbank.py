@@ -41,7 +41,7 @@ class FeatureExtractor:
         self.dither_coef = dither_coef
         
         self.fft_size = 1
-        while self.fft_size > self.frame_length:
+        while self.fft_size < self.frame_length:
             self.fft_size *= 2
         
         self.mel_filter_bank = self.make_mel_filter_bank()

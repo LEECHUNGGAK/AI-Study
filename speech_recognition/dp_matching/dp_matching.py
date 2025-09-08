@@ -5,8 +5,8 @@ import wave
 import numpy as np
 from pathlib import Path
 
-from prepare_wav import WavPreprocessor
-from compute_mfcc import FeatureExtractor
+from prepare.prepare_wav import WavPreprocessor
+from compute_features.compute_mfcc import FeatureExtractor
 
 
 def dp_matching(feature_1, feature_2):
@@ -15,14 +15,15 @@ def dp_matching(feature_1, feature_2):
 
     # 비용 행렬, 누적 비용 행렬, 이동 종류를 초기화합니다.
     distance = np.zeros((nframes_1, nframes_2))
-    cost = np.zeros((nframes_1, nframes_2))
-    track = np.zeros((nframes_1, nframes_2), np.int16)
     for n in range(nframes_1):
         for m in range(nframes_2):
             # 유클리드 거리를 계산할 때 제곱근 계산은 생략한 유클리드 거리 제곱을 사용합니다.
             distance[n, m] = np.sum((feature_1[n] - feature_2[m]) ** 2)
-    cost[0, 0] = distance[0, 0]
 
+    cost = np.zeros((nframes_1, nframes_2))
+    cost[0, 0] = distance[0, 0]
+    track = np.zeros((nframes_1, nframes_2), np.int16)
+    
     # 무조건 세로로 이동하는 경우
     for n in range(1, nframes_1):
         cost[n, 0] = cost[n - 1, 0] + distance[n, 0]
@@ -99,7 +100,7 @@ if __name__ == "__main__":
     out_mfcc_dir = Path("./mfcc")
     np.random.seed(seed=0)
     feature_extractor = FeatureExtractor()
-    for wav_path in out_wav_dir.iterdir():
+    for wav_path in sorted(out_wav_dir.iterdir()):
         mfcc_path_out = out_mfcc_dir / (wav_path.stem + ".bin")
         if mfcc_path_out.exists():
             continue
